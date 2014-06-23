@@ -69,8 +69,9 @@ proc client_send_file {file {dir ""}} {
   puts $sock "POST /fcopy HTTP/1.1"
   puts $sock "X-Command: file save"
   # puts $sock "Content-Encoding: [fconfigure $sock -encoding]"
-  puts $sock "X-File: $file"
-  puts $sock "X-Path: $file_path"
+  puts $sock "X-File: [encoding convertto $file]"
+  
+  puts $sock "X-Path: [encoding convertto $file_path]"
   puts $sock "Content-Length: $file_size"
   puts $sock "X-Debug: $::config(client.debug)"
   

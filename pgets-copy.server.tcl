@@ -145,7 +145,7 @@ proc ::httpd::read_body {sock} {
     return
   }
   
-  set ofile [file join $::config(server.root) $file_path]
+  set ofile [file join $::config(server.root) [encoding convertfrom $file_path]]
   file mkdir [file dirname $ofile]
   
   set fout [open $ofile "w"]
