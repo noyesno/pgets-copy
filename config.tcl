@@ -1,8 +1,10 @@
 array set config {
   title "PGets Copy"
+  debug 1
   
-  server.port  7777
-  server.root  "upload"
+  server.autostart  0
+  server.port       7777
+  server.root       "upload"
   
   client.server_host "localhost"
   client.server_port 7777

@@ -12,10 +12,11 @@ namespace eval ::httpd {
   proc start {} {
     variable port
     
-    if {[catch { socket -server ::httpd::accept $port}]} {
+    if {[catch { set sock [socket -server ::httpd::accept $port] }]} {
       puts "start server fail"
     } else {
       puts "listen on $port"
+      event generate . <<ServerStart>> -data [fconfigure $sock]
     }
   }
   
@@ -195,6 +196,10 @@ proc ::httpd::read_body_http {sock} {
 
 proc ::httpd::accept {sock client_addr client_port} {
   variable clients
+  
+  
+  event generate . <<ClientConnected>> -data [fconfigure $sock]
+  
   puts "DEBUG: sock [fconfigure $sock]"
   fconfigure $sock -encoding binary -translation binary
   puts "DEBUG: sock [fconfigure $sock]"

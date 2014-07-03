@@ -73,12 +73,12 @@ proc client_send_file {file {dir ""}} {
   
   puts $sock "X-Path: [encoding convertto $file_path]"
   puts $sock "Content-Length: $file_size"
-  puts $sock "X-Debug: $::config(client.debug)"
+  puts $sock "X-Debug: $::config(debug)"
   
   puts $sock ""
   flush $sock
   
-  if {$::config(client.debug)} {
+  if {$::config(debug)} {
     return
   }
   
@@ -92,7 +92,9 @@ proc client_send_file {file {dir ""}} {
   fcopy $fp $sock -command [list client_send_done $fp $sock]
   vwait ::client_send_done
   
-  update_meter 
+  update_meter
+  
+  update  ;# TODO
 }
 
 proc client_close {} {
@@ -106,6 +108,11 @@ proc btn_send {} {
   
   set ::time_start [clock seconds]
   set ::bytes_sent 0
+  
+  #.tabs.client.progress start
+  event generate . <<ClientSendStart>>
+  # event generate . <<ClientSendStart>> -data "..." -serial 1 -time "..." 
+  
   if {[file isdir $client_root]} {
     client_send_dir  "" $client_root
   } else {
@@ -114,6 +121,8 @@ proc btn_send {} {
   }
   
   
+  event generate . <<ClientSendStop>>
+  # .tabs.client.progress stop
   # client_send_data "tmp1.txt" "1234567890你好abcdefghij"
   # client_send_data "tmp2.txt" "1234567890你不好abcdefghij"
 }
